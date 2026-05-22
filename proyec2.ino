@@ -27,24 +27,43 @@ int potenciometro = A3;
 int value2 = 0;
 int temperatura = 0;
  
+void ledRGB(int r,int g,int b){
+  digitalWrite(ledR,r);
+  digitalWrite(ledG,g);
+  digitalWrite(ledB,b);
+} 
+
+void Modos(int modos){
+
+  
+  int segmentos[7] = {
+    segA, segB, segC,
+    segD, segE, segF, segG
+  };
+
+  
+  int numeros[3][7] = {
+
+    {1,1,1,1,1,1,0}, 
+    {0,1,1,0,0,0,0}, 
+    {1,1,0,1,1,0,1}  
+  };
+
+  for(int i = 0; i < 7; i++){
+
+    digitalWrite(segmentos[i], numeros[modos][i]);
+  }
+}
 
 void modozero(){
-    digitalWrite(ledR,LOW);
-    digitalWrite(ledG,LOW);
-    digitalWrite(ledB,LOW);
+    ledRGB(LOW,LOW,LOW);
 
     noTone(buzzer);
 
     Servo1.write(0);
     Servo2.write(0);
 
-    digitalWrite(segA,HIGH);
-    digitalWrite(segB,HIGH);
-    digitalWrite(segC,HIGH);
-    digitalWrite(segD,HIGH);
-    digitalWrite(segE,HIGH);
-    digitalWrite(segF,HIGH);
-    digitalWrite(segG,LOW);
+    Modos(0);
     
     
 
@@ -55,41 +74,25 @@ void modouno(){
     lpm = map(value1, 0,1023,0,200);
     grado = map(lpm,0,200,0,180);
 
-    digitalWrite(segA,LOW);
-    digitalWrite(segB,HIGH);
-    digitalWrite(segC,HIGH);
-    digitalWrite(segD,LOW);
-    digitalWrite(segE,LOW);
-    digitalWrite(segF,LOW);
-    digitalWrite(segG,LOW);
+    Modos(1);
 
     Servo1.write(grado);
-
-    Serial.println(value1);
 
     noTone(buzzer);
 
     if (lpm < 60){
-      digitalWrite(ledR,LOW);
-      digitalWrite(ledG,HIGH);
-      digitalWrite(ledB,LOW);
+      ledRGB(LOW,HIGH,LOW);
     }
     else if ((60 <= lpm) && (lpm <= 100)){
-      digitalWrite(ledR,LOW);
-      digitalWrite(ledG,LOW);
-      digitalWrite(ledB,HIGH);
+      ledRGB(LOW,LOW,HIGH);
     }
     else if ((150 >= lpm) && (lpm > 100)){
-      digitalWrite(ledR,HIGH);
-      digitalWrite(ledG,LOW);
-      digitalWrite(ledB,LOW);
+      ledRGB(HIGH,LOW,LOW);
     }
     else{
-      digitalWrite(ledR,HIGH);
-      digitalWrite(ledG,LOW);
-      digitalWrite(ledB,LOW);
+      ledRGB(HIGH,LOW,LOW);
       delay(200);
-      digitalWrite(ledR,LOW);
+      ledRGB(LOW,LOW,LOW);
       delay(200);
       
     }
@@ -100,18 +103,10 @@ void mododos(){
     value2 = analogRead(potenciometro);
     temperatura = map(value2,0,1023,20,45);
     
-    digitalWrite(segA,HIGH);
-    digitalWrite(segB,HIGH);
-    digitalWrite(segC,LOW);
-    digitalWrite(segD,HIGH);
-    digitalWrite(segE,HIGH);
-    digitalWrite(segF,LOW);
-    digitalWrite(segG,HIGH);
+    Modos(2);
 
     if (temperatura < 35) {
-    digitalWrite(ledR, HIGH);
-    digitalWrite(ledG, LOW);
-    digitalWrite(ledB, HIGH);
+    ledRGB(HIGH,LOW,HIGH);
 
     Servo2.write(0);
 
@@ -126,9 +121,7 @@ void mododos(){
 
   
   else if ((temperatura >= 35) && (temperatura < 37)) {
-    digitalWrite(ledR, LOW);
-    digitalWrite(ledG, HIGH);
-    digitalWrite(ledB, HIGH);
+    ledRGB(LOW,HIGH,HIGH);
     
     Servo2.write(45);
 
@@ -136,9 +129,7 @@ void mododos(){
   }
 
   else if ((temperatura >= 37) && (temperatura < 38)) {
-    digitalWrite(ledR, HIGH);
-    digitalWrite(ledG, HIGH);
-    digitalWrite(ledB, LOW);
+    ledRGB(HIGH,HIGH,LOW);
 
     Servo2.write(90);
 
@@ -147,9 +138,7 @@ void mododos(){
 
   
   else if ((temperatura >= 38) && (temperatura < 39)) {
-    digitalWrite(ledR, HIGH);
-    digitalWrite(ledG, HIGH);
-    digitalWrite(ledB, LOW);
+    ledRGB(HIGH,HIGH,LOW);
 
     Servo2.write(135);
 
@@ -158,9 +147,7 @@ void mododos(){
 
   
   else {
-    digitalWrite(ledR, HIGH);
-    digitalWrite(ledG, HIGH);
-    digitalWrite(ledB, HIGH);
+    ledRGB(HIGH,HIGH,HIGH);
 
     Servo2.write(180);
     
