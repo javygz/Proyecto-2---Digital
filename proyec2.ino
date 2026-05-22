@@ -10,9 +10,9 @@ const int segE = 6;
 const int segF = 7;
 const int segG = 8;
 const int botonM = 9;
-const int ledB = 10;
-const int ledR = 11;
-const int ledG = 12;
+const int ledB = 11;
+const int ledR = 12;
+const int ledG = 10;
 const int botonA = 15;
 const int buzzer = 16;
 const int servoPin1 = A0; 
@@ -29,9 +29,9 @@ int temperatura = 0;
 int alarma = 1;
  
 void ledRGB(int r,int g,int b){
-  digitalWrite(ledR,r);
-  digitalWrite(ledG,g);
-  digitalWrite(ledB,b);
+  analogWrite(ledR,r);
+  analogWrite(ledG,g);
+  analogWrite(ledB,b);
 } 
 
 void Modos(int modos){
@@ -57,7 +57,7 @@ void Modos(int modos){
 }
 
 void modozero(){
-    ledRGB(LOW,LOW,LOW);
+    ledRGB(0,0,0);
 
     noTone(buzzer);
 
@@ -82,18 +82,18 @@ void modouno(){
     noTone(buzzer);
 
     if (lpm < 60){
-      ledRGB(LOW,HIGH,LOW);
+      ledRGB(0,255,0);
     }
     else if ((60 <= lpm) && (lpm <= 100)){
-      ledRGB(LOW,LOW,HIGH);
+      ledRGB(255,255,0);
     }
     else if ((150 >= lpm) && (lpm > 100)){
-      ledRGB(HIGH,LOW,LOW);
+      ledRGB(255,0,0);
     }
     else{
-      ledRGB(HIGH,LOW,LOW);
+      ledRGB(255,0,0);
       delay(200);
-      ledRGB(LOW,LOW,LOW);
+      ledRGB(0,0,0);
       delay(200);
       
     }
@@ -107,7 +107,7 @@ void mododos(){
     Modos(2);
 
     if (temperatura < 35) {
-    ledRGB(HIGH,LOW,HIGH);
+    ledRGB(136,0,255);
 
     Servo2.write(0);
 
@@ -129,7 +129,7 @@ void mododos(){
 
   
   else if ((temperatura >= 35) && (temperatura < 37)) {
-    ledRGB(LOW,HIGH,HIGH);
+    ledRGB(0,255,255);
     
     Servo2.write(45);
     
@@ -139,7 +139,7 @@ void mododos(){
   }
 
   else if ((temperatura >= 37) && (temperatura < 38)) {
-    ledRGB(HIGH,HIGH,LOW);
+    ledRGB(255,255,0);
 
     Servo2.write(90);
 
@@ -150,7 +150,7 @@ void mododos(){
 
   
   else if ((temperatura >= 38) && (temperatura < 39)) {
-    ledRGB(HIGH,HIGH,LOW);
+    ledRGB(255,136,0);
 
     Servo2.write(135);
 
@@ -161,7 +161,7 @@ void mododos(){
 
   
   else {
-    ledRGB(HIGH,HIGH,HIGH);
+    ledRGB(255,255,255);
 
     Servo2.write(180);
   
