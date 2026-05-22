@@ -13,8 +13,8 @@ const int botonM = 9;
 const int ledB = 10;
 const int ledR = 11;
 const int ledG = 12;
-const int botonA = 14;
-const int buzzer = 15;
+const int botonA = 15;
+const int buzzer = 16;
 const int servoPin1 = A0; 
 const int servoPin2 = A4;
 int modo = 0; 
@@ -26,6 +26,7 @@ int grado = 0;
 int potenciometro = A3;
 int value2 = 0;
 int temperatura = 0;
+int alarma = 1;
  
 void ledRGB(int r,int g,int b){
   digitalWrite(ledR,r);
@@ -99,7 +100,7 @@ void modouno(){
 }
 
 void mododos(){
-
+    int estadoalarma = digitalRead(botonA);
     value2 = analogRead(potenciometro);
     temperatura = map(value2,0,1023,20,45);
     
@@ -110,20 +111,29 @@ void mododos(){
 
     Servo2.write(0);
 
-    
-    if (digitalRead(botonA) == HIGH) {
-      tone(buzzer, 1000);
+    if (alarma == 1){
+    tone(buzzer,1000);
     }
-    else {
+    
+    if (estadoalarma == HIGH){
+    estadoAnteriorAlarma = 1;
+    }
+    if (estadoAnteriorAlarma == HIGH && estadoalarma == LOW) {
+      estadoAnteriorAlarma = 0;
+      alarma = 0;
+      delay(15);
       noTone(buzzer);
     }
-  }
+    
+    }
 
   
   else if ((temperatura >= 35) && (temperatura < 37)) {
     ledRGB(LOW,HIGH,HIGH);
     
     Servo2.write(45);
+    
+    alarma = 1;
 
     noTone(buzzer);
   }
@@ -132,6 +142,8 @@ void mododos(){
     ledRGB(HIGH,HIGH,LOW);
 
     Servo2.write(90);
+
+    alarma = 1;
 
     noTone(buzzer);
   }
@@ -142,6 +154,8 @@ void mododos(){
 
     Servo2.write(135);
 
+    alarma = 1;
+
     noTone(buzzer);
   }
 
@@ -150,13 +164,21 @@ void mododos(){
     ledRGB(HIGH,HIGH,HIGH);
 
     Servo2.write(180);
-    
-    if (digitalRead(botonA) == HIGH) {
-      tone(buzzer, 1000);
+  
+    if (alarma == 1){
+    tone(buzzer,1000);
     }
-    else {
+    
+    if (estadoalarma == HIGH){
+    estadoAnteriorAlarma = 1;
+    }
+    if (estadoAnteriorAlarma == HIGH && estadoalarma == LOW) {
+      estadoAnteriorAlarma = 0;
+      alarma = 0;
+      delay(15);
       noTone(buzzer);
     }
+    
   }
 
 }
@@ -195,7 +217,7 @@ void setup() {
 void loop() {
 
   int estadoBoton = digitalRead(botonM);
-  int estadoalarma = digitalRead(botonA);
+  
   delay(15);
   if (estadoBoton == HIGH){
     estadoAnteriorBoton = 1;
@@ -209,13 +231,7 @@ void loop() {
     delay(15);
   }
 
-  if (estadoalarma == HIGH){
-    estadoAnteriorAlarma = 1;
-  }
-  if (estadoAnteriorAlarma == HIGH && estadoalarma == LOW) {
-    estadoAnteriorAlarma = 0;
-    delay(15);
-  }
+  
   
   switch(modo){
     case 0:
