@@ -82,10 +82,10 @@ void modouno(){
     noTone(buzzer);
 
     if (lpm < 60){
-      ledRGB(0,255,0);
+      ledRGB(0,0,255);
     }
     else if ((60 <= lpm) && (lpm <= 100)){
-      ledRGB(255,255,0);
+      ledRGB(255,0,255);
     }
     else if ((150 >= lpm) && (lpm > 100)){
       ledRGB(255,0,0);
@@ -107,7 +107,7 @@ void mododos(){
     Modos(2);
 
     if (temperatura < 35) {
-    ledRGB(136,0,255);
+    ledRGB(255,255,0);
 
     Servo2.write(0);
 
@@ -139,7 +139,7 @@ void mododos(){
   }
 
   else if ((temperatura >= 37) && (temperatura < 38)) {
-    ledRGB(255,255,0);
+    ledRGB(255,0,255);
 
     Servo2.write(90);
 
@@ -150,7 +150,7 @@ void mododos(){
 
   
   else if ((temperatura >= 38) && (temperatura < 39)) {
-    ledRGB(255,136,0);
+    ledRGB(255,0,136);
 
     Servo2.write(135);
 
