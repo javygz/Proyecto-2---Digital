@@ -1,0 +1,149 @@
+/******************************
+*Universidad del Valle de Guatemala
+*Electronica analógica 1
+*Javier Alejandro Gómez Domínguez - 191095
+*Programa: RGB con potenciometros
+********************************/
+
+/*Librerias*/ 
+#include <Arduino.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <driver/gpio.h>
+#include <LiquidCrystal.h>
+
+/*Variables globales*/
+//pines del rgb
+#define ledr 26
+#define ledg 33
+#define ledb 32
+
+//pines de los potenciometros
+#define pot1 35
+#define pot2 34
+
+//pines de la LCD
+#define en 15
+#define rs 2
+#define LC0 4
+#define LC1 5
+#define LC2 18
+#define LC3 19
+#define LC4 21
+#define LC5 22
+#define LC6 23
+#define LC7 25
+
+LiquidCrystal lcd(rs, en, LC0, LC1, LC2, LC3, LC4, LC5, LC6, LC7);
+
+//variable para el valor de los potenciometros
+int po1V = 0;
+int po2V = 0;
+int azul = 0;
+int po1;
+int po2;
+
+//variable para el valor independiente
+int contador = 0;
+
+//variable para el contador manual
+char signo = 0;
+
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  pinMode(ledr, OUTPUT);
+  pinMode(ledg, OUTPUT);
+  pinMode(ledb, OUTPUT);
+  pinMode(pot1, INPUT);
+  pinMode(pot2, INPUT);
+
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+ // lcd.print("RGB con potes");
+  lcd.clear();
+  
+
+}
+
+/*Funciones adicionales*/
+
+void rgb(){
+
+  //esto es para leer el valor de los potenciometros
+  po1V = analogRead(pot1);
+  po2V = analogRead(pot2);
+
+  po1 = map(po1V, 0, 4095, 0, 255);
+  po2 = map(po2V, 0, 4095, 0, 255);
+
+  //esta parte escribe el valor de los potenciometros en los leds
+  analogWrite(ledr, po1);
+  analogWrite(ledg, po2);
+  analogWrite(ledb, azul);
+
+}
+
+void lcdDisplay(){
+
+  lcd.setCursor(0, 0);
+  lcd.print("Rojo");
+  lcd.setCursor(0, 1);
+  lcd.print(po1);
+  lcd.print("   ");
+
+
+  lcd.setCursor(5, 0);
+  lcd.print("Verde");
+  lcd.setCursor(5, 1);
+  lcd.print(po2);
+  lcd.print("   ");
+
+  lcd.setCursor(11, 0);
+  lcd.print("Azul");
+  lcd.setCursor(11, 1);
+  lcd.print(azul);
+
+  delay(100);
+
+}
+
+void operacion() {
+  if (Serial.available() > 0) {
+    signo = Serial.read();
+
+    if (signo == '+') {
+      if (azul < 255) {
+        azul++;
+      }
+      Serial.println(azul);
+
+    }
+
+    else if (signo == '-') {
+      if (azul > 0) {
+        azul--;
+      }
+      Serial.println(azul);
+      
+    }
+  }
+}
+
+/*Función principal*/
+
+void loop(){
+
+  rgb();
+  lcdDisplay();
+  operacion();
+ /*Serial.print("Valor del potenciometro 1: ");
+  Serial.println(po1);
+  Serial.print("Valor del potenciometro 2: ");
+  Serial.println(po2);*/
+}
+
+
+
